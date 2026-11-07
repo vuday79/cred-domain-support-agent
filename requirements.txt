@@ -1,0 +1,16 @@
+crewai
+autogen-agentchat
+autogen-core
+langchain-core
+langchain-community
+sentence-transformers
+chromadb
+fastapi
+uvicorn[standard]
+pydantic
+numpy
+pandas
+scikit-learn
+pytest
+python-dotenv
+websockets

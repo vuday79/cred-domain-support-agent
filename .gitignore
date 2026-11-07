@@ -1,34 +1,79 @@
-# Python
+
+# =====================================================
+# Python - Generated Files
+# =====================================================
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Test and tooling caches
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
 htmlcov/
 
-# Virtual environments
+# =====================================================
+# Virtual Environments
+# =====================================================
 .venv/
 venv/
 env/
+ENV/
 
-# Local configuration and credentials
+# =====================================================
+# Environment Variables & Secrets
+# =====================================================
 .env
 .env.*
 !.env.example
 
-# Runtime logs
+# =====================================================
+# Runtime Logs & Temporary Data
+# =====================================================
 *.log
 *.jsonl
 
-# Generated local vector indexes (rebuild with scripts/build_index.py)
-/chroma_db/
-/data/chroma_db/
+# =====================================================
+# Vector Databases & Generated Indexes
+# =====================================================
+chroma_db/
+chroma/
+data/chroma_db/
 
-# Build outputs
+# =====================================================
+# Local Databases
+# =====================================================
+*.sqlite
+*.sqlite3
+*.db
+
+# =====================================================
+# Build & Distribution Outputs
+# =====================================================
 build/
 dist/
-*.egg-info/
+
+# =====================================================
+# Temporary & Backup Files
+# =====================================================
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*~
+
+# =====================================================
+# IDE & Editor Files
+# =====================================================
+.idea/
+.vs/
+*.code-workspace
+
+# =====================================================
+# Operating System Files
+# =====================================================
+.DS_Store
+Thumbs.db
+Desktop.ini

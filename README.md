@@ -4,6 +4,76 @@ Cred (Banking & FinTech) capstone project. The local support API wraps the
 existing deterministic CrewAI workflow, LangChain session memory, input/output
 guardrails, structured Pydantic response, and persistent Chroma collections.
 
+## Installation and setup
+
+Python 3.13.x is the verified runtime (validated with Python 3.13.12). From
+the project root in Windows PowerShell, create and activate a virtual
+environment, then install the dependencies listed in the repository's
+`requirements.txt`:
+
+```powershell
+py -3.13 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+The local embedding model is
+`sentence-transformers/all-MiniLM-L6-v2`. Its weights must be available in
+the local Hugging Face/SentenceTransformers cache. On a first setup without
+cached weights, make the model reachable when you first run the index build;
+after the weights are cached, the application and demonstrations can run
+offline. No LLM API key is required.
+
+Set the offline and telemetry environment variables in PowerShell before
+running the application, evaluation, or demos:
+
+```powershell
+$env:CREWAI_DISABLE_TELEMETRY = "true"
+$env:HF_HUB_OFFLINE = "1"
+$env:TRANSFORMERS_OFFLINE = "1"
+```
+
+## Dataset design
+
+The reproducible generator is [`data/dataset.py`](data/dataset.py). It uses
+seed `42`, generates 50 loan applications, samples from the required
+categories and statuses, and starts with a fraud-flag probability of `0.20`.
+For this seed, validation succeeds on the first attempt.
+
+| Generated field | Observed value |
+|---|---:|
+| Personal Loan | 17 |
+| Home Loan | 5 |
+| Auto Loan | 10 |
+| Education Loan | 7 |
+| Business Loan | 11 |
+| Submitted | 11 |
+| Under Review | 16 |
+| Approved | 9 |
+| Rejected | 4 |
+| Disbursed | 10 |
+| Fraud-review flagged | 14% |
+| Actual generated loan amount range | INR 100,000–4,740,000 |
+
+The generator's configured global amount bounds are INR 50,000–5,000,000;
+the range above is the observed minimum and maximum in the generated dataset.
+
+## Vector database setup
+
+From the project root, build the local vector database with the existing
+indexing script:
+
+```powershell
+python scripts\build_index.py
+```
+
+The script embeds the policy chunks locally with
+`sentence-transformers/all-MiniLM-L6-v2` and creates two persistent ChromaDB
+collections: `cred_fixed_size` and `cred_sentence_based`. The generated
+database is stored locally under `chroma_db/` and is excluded from Git by
+`.gitignore`; rebuild it on a new checkout with the command above.
+
 ## Run locally
 
 From the project root on Windows:
@@ -159,6 +229,12 @@ Generated reports:
 - `evaluation/evaluation_report.md` - methodology, per-case score details,
   aggregate results, and any failures.
 
+Latest recorded evaluation result: **19/19 cases passed**. The report scores
+Accuracy, Grounding, Completeness, and Safety; its per-dimension averages are
+5.00, 5.00, 4.89, and 5.00 out of 5, respectively. See the
+[Task 13 evaluation report](evaluation/evaluation_report.md) for per-query
+scores and methodology.
+
 ## Task 14: AutoGen Reviewer and Editor
 
 After CrewAI creates and validates its response, a tool-less AutoGen
@@ -217,3 +293,19 @@ python -m pytest tests\test_tool_governance.py tests\test_runtime_budget.py -q
 
 The reproducible transcript is generated at
 `evaluation/task15_governance_transcript.md`.
+
+## Project disclaimer and limitations
+
+- The loan-application dataset is synthetic and seeded for reproducible
+  demonstrations.
+- CRED-related policies and examples in the knowledge base are simulated for
+  this capstone and are not official financial-product terms.
+- This is an educational demonstration, not a production financial service.
+- No real customer financial information is used.
+- `MOCK_LLM` is deterministic and offline; it does not represent production
+  LLM reasoning or capabilities.
+- Session memory and the response cache are process-local and are not shared
+  across service processes.
+- Runtime token and cost estimates are illustrative approximations, not
+  actual provider tokenization or billing.
+- The project has not undergone production or regulatory certification.

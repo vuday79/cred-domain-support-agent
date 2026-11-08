@@ -309,3 +309,8 @@ The reproducible transcript is generated at
 - Runtime token and cost estimates are illustrative approximations, not
   actual provider tokenization or billing.
 - The project has not undergone production or regulatory certification.
+
+## Project owner
+
+- Name: Uday Verma
+- Email: uday.v0709@gmail.com
